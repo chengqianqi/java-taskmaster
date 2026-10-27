@@ -23,6 +23,9 @@ public class TaskController {
                         @RequestParam(defaultValue = "5") int size,
                         @RequestParam(required = false) String keyword,
                         Model model) {
+
+        System.out.println("查询参数: " + keyword);
+
         Page<Task> taskPage = taskService.getTasks(page, size, keyword);
         model.addAttribute("page", taskPage);
         model.addAttribute("keyword", keyword);
