@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TaskMaster 任务管理系统</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 40px; background-color: #f4f7f6; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h2 { color: #333; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #007bff; color: white; }
+        .status-TODO { color: #ffc107; font-weight: bold; }
+        .status-DONE { color: #28a745; font-weight: bold; }
+        .pagination { margin-top: 20px; text-align: center; }
+        .pagination a { margin: 0 5px; padding: 8px 16px; text-decoration: none; background: #e9ecef; border-radius: 4px; color: #333; }
+        .pagination a.active { background: #007bff; color: white; }
+        .search-box { text-align: center; margin-bottom: 20px; }
+        input[type="text"] { padding: 8px; width: 60%; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📋 TaskMaster 任务列表</h2>
+    <div style="text-align: right; margin-bottom: 10px;">
+        <a href="/add" style="background: #28a745; color: white; padding: 8px 16px; text-decoration: none; border-radius: 4px;">➕ 新增任务</a>
+    </div>
+    <!-- 搜索框 -->
+    <div class="search-box">
+        <form action="/" method="get">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="输入关键字搜索任务...">
+            <button type="submit">搜索</button>
+        </form>
+    </div>
+
+    <!-- 数据表格 -->
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>任务标题</th>
+            <th>描述</th>
+            <th>状态</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 使用 Thymeleaf 的 th:each 循环遍历数据 -->
+        <tr th:each="task : ${page.records}">
+            <td th:text="${task.id}"></td>
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.description}"></td>
+            <!-- 根据状态动态赋予不同的 CSS 类名 -->
+            <td th:text="${task.status}" th:classappend="'status-' + ${task.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 分页控制 -->
+    <div class="pagination">
+        <span>共 <b th:text="${page.total}"></b> 条数据，当前第 <b th:text="${page.current}"></b> 页</span>
+        <br><br>
+        <a th:href="@{/(page=1, keyword=${keyword})}" th:classappend="${page.current == 1} ? 'active'">首页</a>
+        <a th:href="@{/(page=${page.current - 1}, keyword=${keyword})}" th:if="${page.current > 1}">上一页</a>
+        <a th:href="@{/(page=${page.current + 1}, keyword=${keyword})}" th:if="${page.current < page.pages}">下一页</a>
+        <a th:href="@{/(page=${page.pages}, keyword=${keyword})}" th:classappend="${page.current == page.pages} ? 'active'">尾页</a>
+    </div>
+</div>
+</body>
+</html>

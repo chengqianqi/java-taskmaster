@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  # H2 内存数据库配置
+  datasource:
+    url: jdbc:h2:mem:taskdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  # 启动时自动执行建表语句
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+  # 开启 H2 网页控制台（方便你查看数据库里的数据）
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 在控制台打印 SQL 语句
